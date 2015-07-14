@@ -22,3 +22,11 @@ var worldThree = new LifelikeWorld(planThree, {"#": Wall,
 							    		 	   "0": SmartPlantEater,
 							    		 	   "*": Plant});
 animateWorld(frameThree, worldThree);
+
+var frameFour = document.getElementById('frame-four');
+var worldFour = new LifelikeWorld(planFour, {"#": Wall,
+											 "@": Tiger,
+											 "O": PlantEater,
+											 "0": SmartPlantEater,
+											 "*": Plant});
+animateWorld(frameFour, worldFour);

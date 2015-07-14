@@ -166,6 +166,24 @@ var planThree =	   ["############################",
 					"#***        ##**    0    **#",
 					"##****     ###***       *###",
 					"############################"];
+var planFour = ["####################################################",
+				"#                 ####         ****              ###",
+				"#   *  @  ##                 ########       00    ##",
+				"#   *    ##        O O                 ****       *#",
+				"#       ##*                        ##########     *#",
+				"#      ##***  *         ****                     **#",
+				"#* **  #  *  ***      #########                  **#",
+				"#* **  #      *               #   *              **#",
+				"#     ##              #   0   #  ***          ######",
+				"#*            @       #       #   *        0  #    #",
+				"#*                    #  ######                 ** #",
+				"###          ****          ***                  ** #",
+				"#       O                        @         0       #",
+				"#   *     ##  ##  ##  ##               ###      *  #",
+				"#   **         #              *       #####  O     #",
+				"##  **  O   O  #  #    ***  ***        ###      ** #",
+				"###               #   *****                    ****#",
+				"####################################################"];
 
 var directions = {
   "n":  new Vector( 0, -1),
@@ -308,16 +326,44 @@ SmartPlantEater.prototype.act = function(context) {
 }
 
 function Tiger() {
-	this.energy = 20;
+	this.energy = 40;
   	this.direction = randomElement(directionNames);
-  	this.prey = ["O"];
+  	this.prey = ["O", "0"];
   	this.observedPrey = 0;
 }
 Tiger.prototype.act = function(context) {
-  var prey = this.prey.forEach(function(target) {
-    console.log(target, context.findAll(target));
-  });
-                               
+	// Scans for nearby prey
+	var nearbyPrey = this.prey.map(function(target) {
+		return context.findAll(target);
+	});
+
+	// Go through the nearby prey, and count the number that are encountered, and then add them to the observedPrey property.
+	this.observedPrey += nearbyPrey.reduce(function(sightings, prey) {
+	return sightings += prey.length;
+	}, 0);
+
+	// If there is prey nearby, then pick a target
+	nearbyPrey.forEach(function(prey) {
+		if(prey.length > 0)
+			this.target = randomElement(prey);
+	}, this);
+
+	// Once a target is picked, eat it, and then unset the target;
+	if(this.target != null) {
+		var preyDirection = this.target;
+		this.observedPrey -= 1;
+		this.target = null;
+		return {type: "eat", direction: preyDirection};
+	}
+
+	if(context.look(this.direction) != " ")
+		this.direction = context.find(" ");
+
+	if(this.energy > 80)
+		return {type: "reproduce", direction: this.direction};
+
+	return {type: "move", direction: this.direction};
+
 }
 
 // Wall Objects
