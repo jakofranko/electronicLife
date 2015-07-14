@@ -339,7 +339,7 @@ Tiger.prototype.act = function(context) {
 
 	// Go through the nearby prey, and count the number that are encountered, and then add them to the observedPrey property.
 	this.observedPrey += nearbyPrey.reduce(function(sightings, prey) {
-	return sightings += prey.length;
+		return sightings += prey.length;
 	}, 0);
 
 	// If there is prey nearby, then pick a target
@@ -349,7 +349,7 @@ Tiger.prototype.act = function(context) {
 	}, this);
 
 	// Once a target is picked, eat it, and then unset the target;
-	if(this.target != null) {
+	if(this.target != null && this.observedPrey > 1) {
 		var preyDirection = this.target;
 		this.observedPrey -= 1;
 		this.target = null;
@@ -359,7 +359,7 @@ Tiger.prototype.act = function(context) {
 	if(context.look(this.direction) != " ")
 		this.direction = context.find(" ");
 
-	if(this.energy > 80)
+	if(this.energy > 100)
 		return {type: "reproduce", direction: this.direction};
 
 	return {type: "move", direction: this.direction};
