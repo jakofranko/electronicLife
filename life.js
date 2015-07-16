@@ -349,7 +349,7 @@ Tiger.prototype.act = function(context) {
 	}, this);
 
 	// Once a target is picked, eat it, and then unset the target;
-	if(this.target != null && this.observedPrey > 1) {
+	if(this.target != null) {
 		var preyDirection = this.target;
 		this.observedPrey -= 1;
 		this.target = null;
@@ -357,7 +357,7 @@ Tiger.prototype.act = function(context) {
 	}
 
 	if(context.look(this.direction) != " ")
-		this.direction = context.find(" ");
+		this.direction = context.find(" ") || randomElement(directionNames);
 
 	if(this.energy > 100)
 		return {type: "reproduce", direction: this.direction};
